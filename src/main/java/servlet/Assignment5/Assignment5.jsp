@@ -23,7 +23,7 @@
 				</ul>
 				<label for="expression">Enter Logic Expression</label><br>
 				<textarea id="expression" name="expression" 
-					placeholder="Example: A AND B OR C ...." style="height: 100px">${expression}</textarea>
+					placeholder="Example: (A && B) || !c ...." style="height: 100px">${expression}</textarea>
 				<input type="submit" value="Create Truth Table">
 
 			</form><br>
