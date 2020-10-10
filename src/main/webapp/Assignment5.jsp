@@ -18,7 +18,14 @@
 			<form method="post" action="${pageContext.request.contextPath}/LogicTable">
 				<div>Instructions: </div>
 				<ul>
-				  <li>Valid Logic Operands: ||, &&, !</li>
+					<li>Valid Logic Operands:
+						<ul>
+							<li>AND -> &&</li>
+							<li>OR -> ||</li>
+							<li>XOR -> !=</li>
+							<li>NOT -> !</li>
+						</ul>
+					</li>
 				  <li>Valid Variable Symbols: A/a, B/b, .... Z/z</li>
 				</ul>
 				<label for="expression">Enter Logic Expression</label><br>

@@ -71,7 +71,7 @@ public class LogicTable extends HttpServlet {
 	}
 	
 	public boolean containsSpecial(HttpServletRequest request, String str){
-		Pattern p = Pattern.compile("([@#$%*^_+=<>?{}\\[\\]~-])");
+		Pattern p = Pattern.compile("([,';\\\".\\\\/\\\\\\\\:@#$%*_+<>?{}\\\\[\\\\]~-])|([0-9])");
 		Matcher m = p.matcher(str);
 		
 		String var = "";
@@ -82,6 +82,7 @@ public class LogicTable extends HttpServlet {
 		}
 		else
 			var = "Expression: " + str;
+      request.setAttribute("expression", str);
 		return b;
 	}
 	
