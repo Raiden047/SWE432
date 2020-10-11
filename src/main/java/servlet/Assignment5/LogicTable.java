@@ -53,12 +53,19 @@ public class LogicTable extends HttpServlet {
 		response.setContentType("text/html");
 		String exp = request.getParameter("expression");
 		if(!exp.equals("")) {
-			if(!containsSpecial(request, exp)) {
-				if(containsProperVar(request, exp)) {
-					ArrayList<String> vars = getVars(exp);
-					if(isLogicWork(request, vars, exp)) {
-						String [][] table = makeTable(vars, exp);
-						PrintTable(request, table);
+			if(!hasLowerChars(request, exp)) {
+				if(!containsSpecial(request, exp)) {
+					if(!isLogicRepeating(request, exp)) {
+						request.setAttribute("echo", "Expression: "+exp);
+						String exp2 = replaceLogicSyntax(request, exp);
+						if(isSingleChar(request, exp2)) {
+							ArrayList<String> vars = getVars(exp2);
+							ArrayList<String> varChain = getVarSequence(exp2);
+							if(isLogicWork(request, vars, varChain, exp2)) {
+								String [][] table = makeTable(vars, exp2);
+								PrintTable(request, table);
+							}
+						}
 					}
 				}
 			}
@@ -70,6 +77,20 @@ public class LogicTable extends HttpServlet {
 		request.getRequestDispatcher("Assignment5.jsp").forward(request, response);
 	}
 	
+	public boolean hasLowerChars(HttpServletRequest request, String str){
+		Pattern p = Pattern.compile("([a-z])+");
+		Matcher m = p.matcher(str);
+		String var = "";
+		boolean b = m.find();
+		if(b){
+			var = "Error Lower case Letters are not allowed: " + m.group();
+			request.setAttribute("echo", var);
+			return true;
+		}
+
+		return false;
+	}
+	
 	public boolean containsSpecial(HttpServletRequest request, String str){
 		Pattern p = Pattern.compile("([,';\\\".\\\\/\\\\\\\\:@#$%*_+<>?{}\\\\[\\\\]~-])|([0-9])");
 		Matcher m = p.matcher(str);
@@ -77,15 +98,27 @@ public class LogicTable extends HttpServlet {
 		String var = "";
 		boolean b = m.find();
 		if(b) {
-			var = "Error: Invalid Symbol: " + m.group();
+			var = "Error Invalid Symbol/Character: " + m.group();
 			request.setAttribute("echo", var);
+			return true;
 		}
-		else
-			var = "Expression: " + str;
-      request.setAttribute("expression", str);
-		return b;
+		return false;
 	}
 	
+	public boolean isLogicRepeating(HttpServletRequest request, String str){
+		Matcher match = Pattern.compile("(and|AND|&|or|OR|\\||xor|XOR|!=|\\^){2,}", Pattern.CASE_INSENSITIVE).matcher(str);
+		String var = "";
+		while(match.find()){
+			if(!match.group().equals("&&") && !match.group().equals("||")){
+				var = "Error Logic is Repeating: "+ match.group();
+				request.setAttribute("echo", var);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*
 	public boolean containsProperVar(HttpServletRequest request, String str){
       Pattern p = Pattern.compile("([0-9])([^a-zA-Z])([@#$%*_+=<>?{}\\[\\]~-])");
       Matcher m = p.matcher(str);
@@ -97,7 +130,31 @@ public class LogicTable extends HttpServlet {
       else
     	  var = "Error: Invalid Character: " + m.group();
       request.setAttribute("echo", var);
+      request.setAttribute("expression", str);
       return b;
+	}*/
+	
+	public String replaceLogicSyntax(HttpServletRequest request, String str){
+		Matcher matchAND = Pattern.compile("(AND|and|&+)", Pattern.CASE_INSENSITIVE).matcher(str);
+		//String str2 = "";
+		while(matchAND.find()){
+			str = matchAND.replaceAll("&&");
+		}
+		
+		String str4 = "";
+		Matcher matchXOR = Pattern.compile("(XOR|xor|!=|\\^)", Pattern.CASE_INSENSITIVE).matcher(str);
+		while(matchXOR.find()){
+			str = matchXOR.replaceAll("!=");
+		}
+		
+		String str3 = "";
+		Matcher matchOR = Pattern.compile("(OR|or|\\|+)", Pattern.CASE_INSENSITIVE).matcher(str);
+		while(matchOR.find()){
+			str = matchOR.replaceAll("||");
+		}
+
+		//System.out.println("Replaced Logic: " + str);
+		return str;
 	}
 	
 	public static ArrayList<String> getVars(String str){
@@ -113,7 +170,32 @@ public class LogicTable extends HttpServlet {
 		return allMatches;
 	}
 	
-	public boolean isLogicWork(HttpServletRequest request, ArrayList<String> vars, String expression) {
+	public boolean isSingleChar(HttpServletRequest request, String str){
+	      Pattern p = Pattern.compile("(\\w){2,}");
+	      Matcher m = p.matcher(str);
+	      String var = "";
+	      boolean b = m.find();
+	      if(b){
+	         var = "Error Only Single Characters Symbols Allowed:  " + m.group();
+	         request.setAttribute("echo", var);
+	         return false;
+	      }
+	         
+	      return true;
+	   }
+	
+	public static ArrayList<String> getVarSequence(String str){
+		Pattern p = Pattern.compile("([a-zA-Z]+)");
+		Matcher m = p.matcher(str);
+	      
+		ArrayList<String> allMatches = new ArrayList<String>();
+		while (m.find()) {
+			allMatches.add(m.group());
+		}
+		return allMatches;
+	}
+	
+	public boolean isLogicWork(HttpServletRequest request, ArrayList<String> vars, ArrayList<String> varChain, String expression) {
 		Pattern pattern;
 		Matcher matcher;
 		for(int i = 0; i < vars.size(); i++){
@@ -128,6 +210,11 @@ public class LogicTable extends HttpServlet {
 		catch(Exception e){
 			//System.out.println(e);
 			String str = "Error: " + e;
+			for(int i = 0; i < varChain.size(); i++){
+				pattern = Pattern.compile("true");
+				matcher = pattern.matcher(str); 
+				str = matcher.replaceFirst(varChain.get(i));
+			}
 			request.setAttribute("echo", str);
 			return false;
 		}

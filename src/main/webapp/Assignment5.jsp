@@ -20,17 +20,17 @@
 				<ul>
 					<li>Valid Logic Operands:
 						<ul>
-							<li>AND -> &&</li>
-							<li>OR -> ||</li>
-							<li>XOR -> !=</li>
-							<li>NOT -> !</li>
+							<li>AND / && / &</li>
+							<li>OR  / || / |</li>
+							<li>XOR / ^ / !=</li>
+							<li>NOT -> ! (only symbol not word)</li>
 						</ul>
 					</li>
-				  <li>Valid Variable Symbols: A/a, B/b, .... Z/z</li>
+				  <li>Valid Variable Symbols: A, B, C, .... Z</li>
 				</ul>
 				<label for="expression">Enter Logic Expression</label><br>
 				<textarea id="expression" name="expression" 
-					placeholder="Example: (A && B) || !C ...." style="height: 100px">${expression}</textarea>
+					placeholder="Example: (A AND B) || !C ...." style="height: 100px">${expression}</textarea>
 				<input type="submit" value="Create Truth Table">
 
 			</form><br>
