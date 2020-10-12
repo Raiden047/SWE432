@@ -51,9 +51,9 @@
 	</div>
 	
 	<h5>Collaboration Summary:</h5>
-	<p>Fahad created the style of the entire page and the styling for the buttons, textboxs, etc. 
-	He also handled the sending of the information using the form given to us. 
-	Casey tested out the final product to see if anything could go wrong with it, and wrote up the 
-	collaboration paragraph. He also gave some feedback if more work is going to be done with this.</p>
+	<p>Fahad fixed up a few things with the interface while also moving the old code to the new java GET/POST code. 
+		He also handled the sending of the information using a servlet.  
+		Casey handled the backend computation, testing the web page and writting the collaborative summary. 
+		Fahad then looked over the backend to make it better..</p>
 </body>
 </html>
