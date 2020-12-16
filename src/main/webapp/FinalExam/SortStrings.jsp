@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
-<html>
+<html translate="no">
 <head>
 	<meta charset="ISO-8859-1">
 	<title>SortStrings</title>
-	<link href="${pageContext.request.contextPath}/FinalExam/styles.css" rel="stylesheet" type="text/css" />
-	<script src="${pageContext.request.contextPath}/FinalExam/script.js"></script>
+	<link href="${pageContext.request.contextPath}/styles.css" rel="stylesheet" type="text/css" />
+	<script src="${pageContext.request.contextPath}/script.js"></script>
 </head>
 <body>
 <p><a href="https://mason.gmu.edu/~fibrahi/">Return to Home</a></p>
